@@ -10,15 +10,14 @@ public class PlayerHand : MonoBehaviour
 
     private int _cardNum = 0;
 
-    public void AddCard(GameObject card)
+    public void AddCard(Card card)
     {
-        var curPos = gameObject.GetComponent<CardPositioner>().CurrentCardPos;
         var positioner = gameObject.GetComponent<CardPositioner>();
         
-        card.transform.position = new Vector3(positioner.CurrentCardPos.x, positioner.CurrentCardPos.y, 0);
-        card.transform.parent = gameObject.transform;
+        card.gameObject.transform.position = new Vector3(positioner.CurrentCardPos.x, positioner.CurrentCardPos.y, 0);
+        card.gameObject.transform.parent = gameObject.transform;
 
-        card.GetComponent<Renderer>().sortingOrder = _cardNum;
+        card.gameObject.GetComponent<Renderer>().sortingOrder = _cardNum;
 
         positioner.UpdateCardPos();
 
