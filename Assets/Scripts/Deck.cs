@@ -9,9 +9,6 @@ public class Deck : MonoBehaviour
     [SerializeField]
     private GameObject _cardPrefab;
 
-    [SerializeField]
-    private int _cardNumPerLine;
-
     private Card[] _cards;
 
     // 初期化済みフラグ。
@@ -82,31 +79,6 @@ public class Deck : MonoBehaviour
         }
     }
 
-    // private SortedDictionary<int, Card> _cards;
-
-    // // public Deck (Card[] cards)
-    // // {
-    // //     // カードをシャッフルする。
-    // // }
-
-    // public Card PeekCard(int index)
-    // {
-    //     if (! _cards.ContainsKey(index))
-    //         throw new ArgumentException("");
-
-    //     return _cards[index];
-    // }
-
-    // public Card RemoveCard(int index)
-    // {
-    //     if (! _cards.ContainsKey(index))
-    //         throw new ArgumentException("");
-
-    //     var removed = _cards[index];
-    //     _cards.Remove(index);
-    //     return removed;
-    // }
-
     public Card[] RestCards()
     {
         return _cards
@@ -118,6 +90,13 @@ public class Deck : MonoBehaviour
     {
         return _cards
             .Where((card) => { return card.Showed; })
+            .ToArray();
+    }
+
+    public Card[] RestShowedCards()
+    {
+        return _cards
+            .Where((card) => { return card.Showed && !card.Picked; })
             .ToArray();
     }
 

@@ -32,7 +32,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-    // TODO CPUの強さを変数で渡す。
     public void InitGame()
     {
         // 2回目以降のスタート用。

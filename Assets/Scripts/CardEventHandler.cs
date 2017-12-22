@@ -47,6 +47,11 @@ public class CardEventHandler : MonoBehaviour, ICardEventHandler
     // CPU導入時に、引数でPlayer情報を渡す必要がある。
     public void OnClick(Card card)
     {
+        if (TurnManager.Instance.NowTurn == PlayerType.Cpu)
+        {
+            return;
+        }
+
         if (_cards[0] == null)
         {
             _cards[0] = card;
@@ -77,6 +82,7 @@ public class CardEventHandler : MonoBehaviour, ICardEventHandler
         {
             _cards[0].Close();
             _cards[1].Close();
+            TurnManager.Instance.NowTurn = PlayerType.Cpu;
         }
         Array.Clear(_cards, 0, 2);
     }
