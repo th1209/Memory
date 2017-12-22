@@ -30,4 +30,9 @@ public class PlayerHand : MonoBehaviour
     {
 
     }
+
+    public void Reset()
+    {
+        gameObject.GetComponent<CardPositioner>().Reset();
+    }
 }

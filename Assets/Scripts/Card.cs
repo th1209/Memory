@@ -17,6 +17,7 @@ public class Card : MonoBehaviour
 {
     [SerializeField]
     private int _number;
+
     [SerializeField]
     private CardSuit _suit;
 
@@ -38,6 +39,12 @@ public class Card : MonoBehaviour
     }
 
     public bool Showed
+    {
+        get;
+        set;
+    }
+
+    public bool Picked
     {
         get;
         set;
@@ -65,6 +72,7 @@ public class Card : MonoBehaviour
             (handler, eventData) => handler.OnClick(this)
         );
     }
+
     public void Open()
     {
         // TODO
@@ -73,6 +81,8 @@ public class Card : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().sprite = sprites
             .Where(sprite => sprite.name.Equals(spriteName))
             .First();
+
+        Showed = true;
     }
 
     public void Close()
@@ -100,5 +110,6 @@ public class Card : MonoBehaviour
     void Start()
     {
         Showed = false;
+        Picked = false;
     }
 }

@@ -67,6 +67,9 @@ public class CardEventHandler : MonoBehaviour, ICardEventHandler
 
         if (_cards[0].IsSame(_cards[1]))
         {
+            _cards[0].Picked = true;
+            _cards[1].Picked = true;
+
             _hands[0].AddCard(_cards[0]);
             _hands[0].AddCard(_cards[1]);
         }

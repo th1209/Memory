@@ -59,4 +59,9 @@ public class CardPositioner : MonoBehaviour
         var newPos = new Vector2(x, y);
         CurrentCardPos = newPos;
     }
+
+    public void Reset()
+    {
+        _currentCardPos = _initialCardPos;
+    }
 }

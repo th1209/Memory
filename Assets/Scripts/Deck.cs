@@ -12,12 +12,19 @@ public class Deck : MonoBehaviour
     [SerializeField]
     private int _cardNumPerLine;
 
+    private Card[] _cards;
+
+    // 初期化済みフラグ。
+    public bool Built
+    {
+        get;
+        set;
+    }
+
     public GameObject CardPrefab
     {
         get { return _cardPrefab; }
     }
-
-    private GameObject[] _cards;
 
     /// <summary>
     /// デッキの初期化。
@@ -30,10 +37,12 @@ public class Deck : MonoBehaviour
             throw new ArgumentException("");
 
         var cardNum = numbers.Count() * suitArray.Count();
-        _cards = new GameObject[cardNum];
+        _cards = new Card[cardNum];
 
         AlignCards(cardNum);
         ShuffleAndAssign(numbers, suitArray);
+
+        Built = true;
     }
 
     /// <summary>
@@ -49,8 +58,8 @@ public class Deck : MonoBehaviour
             var curPos = positioner.CurrentCardPos;
 
             var cardObj = Instantiate(CardPrefab, new Vector3(curPos.x, curPos.y, 0), Quaternion.identity);
-            _cards[i] = cardObj;
             cardObj.transform.parent = gameObject.transform;
+            _cards[i] = cardObj.GetComponent<Card>();
 
             positioner.UpdateCardPos();
         }
@@ -67,15 +76,10 @@ public class Deck : MonoBehaviour
         {
             foreach (var suit in suitArray)
             {
-                _cards[current].GetComponent<Card>().Initialize(number, suit);
+                _cards[current].Initialize(number, suit);
                 current++;
             }
         }
-    }
-
-    public GameObject[] GetCards()
-    {
-        return _cards;
     }
 
     // private SortedDictionary<int, Card> _cards;
@@ -103,35 +107,35 @@ public class Deck : MonoBehaviour
     //     return removed;
     // }
 
-    // public Card[] RestCards()
-    // {
-    //     return _cards
-    //         .Select( (card) => { return card.Value; } )
-    //         .ToArray();
-    // }
+    public Card[] RestCards()
+    {
+        return _cards
+            .Where((card) => { return !card.Picked; })
+            .ToArray();
+    }
 
-    // public Card[] ShowedCards()
-    // {
-    //     // TODO indexは?
-    //     // プロパティを持って、PeekCardした際に更新しても良いかも。
-    //     return _cards
-    //         .Where( (card) => { return card.Value.Showed == true; } )
-    //         .Select( (card) => { return card.Value; } )
-    //         .ToArray();
-    // }
+    public Card[] ShowedCards()
+    {
+        return _cards
+            .Where((card) => { return card.Showed; })
+            .ToArray();
+    }
 
-    // public bool Empty()
-    // {
-    //     return _cards.Count == 0;
-    // }
+    public void Reset()
+    {
+        foreach (var card in _cards)
+        {
+            GameObject.DestroyImmediate(card.gameObject);
+            //Destroy(card.gameObject);
+        }
 
-    // private void Shuffle()
-    // {
+        gameObject.GetComponent<CardPositioner>().Reset();
 
-    // }
+        Built = false;
+    }
 
-    // void Start()
-    // {
-    //     _cards = new SortedDictionary<int, Card>();
-    // }
+    void Start()
+    {
+        Built = false;
+    }
 }
