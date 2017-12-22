@@ -66,7 +66,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 一通りのUIパーツを取得しておき、一旦全て無効化する。
     /// </summary>
-    void Start()
+    void Awake()
     {
         _startPanel = GameObject.Find("/Canvas/StartPanel");
         _resultPanel = GameObject.Find("/Canvas/ResultPanel");
@@ -80,7 +80,6 @@ public class UIManager : MonoBehaviour
         _player2Panel.SetActive(false);
         _quitButton.SetActive(false);
     }
-
 
     void Update()
     {

@@ -35,7 +35,8 @@ public class GameController : MonoBehaviour
     // TODO CPUの強さを変数で渡す。
     public void InitGame()
     {
-        //ResetObjects();
+        // 2回目以降のスタート用。
+        ResetObjects();
 
         _uiManager.HideStartUIParts();
         _uiManager.HideResultUIParts();
@@ -47,6 +48,13 @@ public class GameController : MonoBehaviour
             Enumerable.Range(1, 1).ToArray(),
             new CardSuit[] { CardSuit.Club, CardSuit.Diamond,}
         );
+    }
+
+    public void QuitGame()
+    {
+        ResetObjects();
+        _uiManager.HideGameUIParts();
+        _uiManager.ShowStartUIParts();
     }
 
     private void ResetObjects()

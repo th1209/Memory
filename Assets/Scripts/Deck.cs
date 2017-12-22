@@ -123,10 +123,12 @@ public class Deck : MonoBehaviour
 
     public void Reset()
     {
+        if (! Built)
+            return;
+
         foreach (var card in _cards)
         {
             GameObject.DestroyImmediate(card.gameObject);
-            //Destroy(card.gameObject);
         }
 
         gameObject.GetComponent<CardPositioner>().Reset();
