@@ -82,7 +82,7 @@ public class CardEventHandler : MonoBehaviour, ICardEventHandler
         {
             _cards[0].Close();
             _cards[1].Close();
-            TurnManager.Instance.NowTurn = PlayerType.Cpu;
+            TurnManager.Instance.SwitchTurn(PlayerType.Cpu);
         }
         Array.Clear(_cards, 0, 2);
     }

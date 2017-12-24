@@ -7,6 +7,8 @@ public class TurnManager : MonoBehaviour
 
     private static TurnManager _instance;
 
+    private UIManager _uiManager;
+
     public PlayerType NowTurn
     {
         get;
@@ -31,16 +33,16 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    public void SwitchTurn()
+    public void SwitchTurn(PlayerType toPlayerType)
     {
-        NowTurn = (NowTurn == PlayerType.Player)
-            ? PlayerType.Cpu
-            : PlayerType.Player;
+        NowTurn = toPlayerType;
+        _uiManager.SwitchTurn(NowTurn);
     }
 
     void Start()
     {
         NowTurn = PlayerType.Player;
+        _uiManager = GameObject.Find("/UIManager").GetComponent<UIManager>();
     }
 
     void Update()

@@ -111,7 +111,7 @@ public class Cpu : MonoBehaviour
         {
             cards[0].Close();
             cards[1].Close();
-            TurnManager.Instance.NowTurn = PlayerType.Player;
+            TurnManager.Instance.SwitchTurn(PlayerType.Player);
         }
 
         _picking = false;
@@ -133,7 +133,6 @@ public class Cpu : MonoBehaviour
         };
         _deck = GameObject.Find("/Field/Deck").GetComponent<Deck>();
         _hand = GameObject.Find("/Field/Player2Field").GetComponent<PlayerHand>();
-
     }
     void Update()
     {

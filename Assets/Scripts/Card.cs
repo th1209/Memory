@@ -21,6 +21,9 @@ public class Card : MonoBehaviour
     [SerializeField]
     private CardSuit _suit;
 
+    [SerializeField]
+    private float _cardMoveTime = 0.25f;
+
     public int Number
     {
         get { return _number; }
@@ -48,6 +51,12 @@ public class Card : MonoBehaviour
     {
         get;
         set;
+    }
+
+    private float CardMoveTime
+    {
+        get { return _cardMoveTime; }
+        set { _cardMoveTime = value; }
     }
 
     public void Initialize(int n, CardSuit s)
@@ -94,6 +103,24 @@ public class Card : MonoBehaviour
             .First();
     }
 
+    public void Move(Vector3 to)
+    {
+        StartCoroutine(MoveUsingLerp(to));
+    }
+
+    private IEnumerator MoveUsingLerp(Vector3 to)
+    {
+        float CardMoveTime = 0.25f;
+        float startTime = Time.time;
+
+        Vector3 from = gameObject.transform.position;
+
+        do{
+            gameObject.transform.position = Vector3.Lerp(from, to, (Time.time - startTime) / CardMoveTime);
+            yield return null;
+        }while(CardMoveTime > (Time.time - startTime));
+    }
+
     private string ResolveSpriteName()
     {
         var path = "card_{0}_{1}";
@@ -111,5 +138,10 @@ public class Card : MonoBehaviour
     {
         Showed = false;
         Picked = false;
+    }
+
+    void Update()
+    {
+
     }
 }

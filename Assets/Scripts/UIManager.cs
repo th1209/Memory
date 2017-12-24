@@ -10,7 +10,12 @@ public class UIManager : MonoBehaviour
     private GameObject _startPanel;
     private GameObject _resultPanel;
     private GameObject _player1Panel;
+    private GameObject _player1TurnImage;
+
+    private GameObject _player1Score;
     private GameObject _player2Panel;
+    private GameObject _player2TurnImage;
+    private GameObject _player2Score;
     private GameObject _quitButton;
 
     public void ShowStartUIParts()
@@ -37,13 +42,21 @@ public class UIManager : MonoBehaviour
         _quitButton.SetActive(false);
     }
 
-    public void ShowResultUIParts(PlayerType winPlayer)
+    public void ShowResultUIParts()
     {
         _startPanel.SetActive(true);
 
-        var resultWord = (winPlayer == PlayerType.Player)
-            ? "You win !"
-            : "You lose";
+        var p1Score = int.Parse(_player1Score.GetComponent<Text>().text);
+        var p2Score = int.Parse(_player2Score.GetComponent<Text>().text);
+
+        var resultWord = "";
+        if (p1Score > p2Score)
+            resultWord = "You win !";
+        else if (p1Score < p2Score)
+            resultWord = "You lose";
+        else
+            resultWord = "Draw";
+
         _resultPanel.transform.FindChild("Text").GetComponent<Text>().text = resultWord;
         _resultPanel.SetActive(true);
     }
@@ -53,14 +66,28 @@ public class UIManager : MonoBehaviour
         _resultPanel.SetActive(false);
     }
 
-    public void AddScore(PlayerType playerType, int score)
+    public void SwitchTurn(PlayerType toPlayerType)
     {
+        var onImage = (toPlayerType == PlayerType.Player) ? _player1TurnImage : _player2TurnImage;
+        var offImage = (toPlayerType == PlayerType.Player) ? _player2TurnImage : _player1TurnImage;
 
+        onImage.GetComponent<Animator>().SetBool("TurnOn", true);
+        offImage.GetComponent<Animator>().SetBool("TurnOn", false);
     }
 
-    public void ResetScore()
+    public void ChangeScore(PlayerType playerType, int score)
     {
-        
+        var scoreObj = (playerType == PlayerType.Player) ? _player1Score : _player2Score;
+        scoreObj.GetComponent<Text>().text = score.ToString();
+    }
+
+    public void Reset()
+    {
+        _player1Score.GetComponent<Text>().text = "0";
+        _player2Score.GetComponent<Text>().text = "0";
+
+        _player1TurnImage.GetComponent<Animator>().SetBool("TurnOn", false);
+        _player2TurnImage.GetComponent<Animator>().SetBool("TurnOn", false);
     }
 
     /// <summary>
@@ -73,6 +100,12 @@ public class UIManager : MonoBehaviour
         _player1Panel = GameObject.Find("/Canvas/Player1Panel");
         _player2Panel = GameObject.Find("/Canvas/Player2Panel");
         _quitButton = GameObject.Find("/Canvas/QuitButton");
+
+        _player1TurnImage = _player1Panel.transform.FindChild("TurnImage").gameObject;
+        _player2TurnImage = _player2Panel.transform.FindChild("TurnImage").gameObject;
+
+        _player1Score = _player1Panel.transform.FindChild("Score").FindChild("ScoreValue").gameObject;
+        _player2Score = _player2Panel.transform.FindChild("Score").FindChild("ScoreValue").gameObject;
 
         _startPanel.SetActive(false);
         _resultPanel.SetActive(false);

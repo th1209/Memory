@@ -4,35 +4,40 @@ using UnityEngine;
 
 public class PlayerHand : MonoBehaviour
 {
-    // public double CurrentScore { get; set; }
-
-    // public Card[] Cards { get; }
+    public int Score { get; set; }
 
     private int _cardNum = 0;
+
+    private UIManager _uiManager;
+
+    [SerializeField]
+    private PlayerType _playerType = PlayerType.Player;
 
     public void AddCard(Card card)
     {
         var positioner = gameObject.GetComponent<CardPositioner>();
         
-        card.gameObject.transform.position = new Vector3(positioner.CurrentCardPos.x, positioner.CurrentCardPos.y, 0);
+        //card.gameObject.transform.position = new Vector3(positioner.CurrentCardPos.x, positioner.CurrentCardPos.y, 0);
+        card.Move(new Vector3(positioner.CurrentCardPos.x, positioner.CurrentCardPos.y, 0));
         card.gameObject.transform.parent = gameObject.transform;
 
         card.gameObject.GetComponent<Renderer>().sortingOrder = _cardNum;
 
         positioner.UpdateCardPos();
 
-        // TODO AddScoreする。
+        Score++;
+        _uiManager.ChangeScore(_playerType, Score);
 
         _cardNum++;
     }
-
-    public void AddScore()
-    {
-
-    }
-
     public void Reset()
     {
+        Score = 0;
         gameObject.GetComponent<CardPositioner>().Reset();
+    }
+
+    void Start()
+    {
+        _uiManager = GameObject.Find("/UIManager").GetComponent<UIManager>();
     }
 }

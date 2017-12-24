@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     private PlayerHand _p1Field;
     private PlayerHand _p2Field;
     private UIManager _uiManager;
+    private TurnManager _turnManager;
 
     void Start()
     {
@@ -17,6 +18,7 @@ public class GameController : MonoBehaviour
         _p1Field = GameObject.Find("/Field/Player1Field").GetComponent<PlayerHand>();
         _p2Field = GameObject.Find("/Field/Player2Field").GetComponent<PlayerHand>();
         _uiManager = GameObject.Find("/UIManager").GetComponent<UIManager>();
+        _turnManager = TurnManager.Instance;
 
         _uiManager.ShowStartUIParts();
     }
@@ -27,8 +29,7 @@ public class GameController : MonoBehaviour
         {
             _uiManager.HideGameUIParts();
             _uiManager.ShowStartUIParts();
-            //TODO 勝ったPlayerに応じて表示を変える。
-            _uiManager.ShowResultUIParts(PlayerType.Player);
+            _uiManager.ShowResultUIParts();
         }
     }
 
@@ -41,10 +42,12 @@ public class GameController : MonoBehaviour
         _uiManager.HideResultUIParts();
         _uiManager.ShowGameUIParts();
 
+        _turnManager.SwitchTurn(PlayerType.Player);
+
         _deck.BuildCards(
-            //Enumerable.Range(1, 10).ToArray(),
-            //new CardSuit[] { CardSuit.Club, CardSuit.Diamond, CardSuit.Heart, CardSuit.Spade }
-            Enumerable.Range(1, 1).ToArray(),
+            // Enumerable.Range(1, 10).ToArray(),
+            // new CardSuit[] { CardSuit.Club, CardSuit.Diamond, CardSuit.Heart, CardSuit.Spade }
+            Enumerable.Range(1, 4).ToArray(),
             new CardSuit[] { CardSuit.Club, CardSuit.Diamond,}
         );
     }
@@ -58,7 +61,7 @@ public class GameController : MonoBehaviour
 
     private void ResetObjects()
     {
-        _uiManager.ResetScore();
+        _uiManager.Reset();
         _deck.Reset();
         _p1Field.Reset();
         _p2Field.Reset();
