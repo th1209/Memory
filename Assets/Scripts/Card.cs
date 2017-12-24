@@ -118,7 +118,8 @@ public class Card : MonoBehaviour
         do{
             gameObject.transform.position = Vector3.Lerp(from, to, (Time.time - startTime) / CardMoveTime);
             yield return null;
-        }while(CardMoveTime > (Time.time - startTime));
+        // ↓ 1.0fを足しこんでいるのは、中途半端な場所でMoveが止まらないようにするため。
+        }while((CardMoveTime + 1.0f) > (Time.time - startTime));
     }
 
     private string ResolveSpriteName()

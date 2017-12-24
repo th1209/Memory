@@ -18,6 +18,10 @@ public class Cpu : MonoBehaviour
     private bool _picking;
 
     private Dictionary<CpuLevel, float> _levelAndPickRateMap;
+
+    /// <summary>
+    /// レベルを表すintとEnumのマップ(インスペクタ上で、Enumを値に設定できないため、やむなく定義)。
+    /// </summary>
     private Dictionary<int, CpuLevel> _numberAndLevelMap;
 
     public void SetLevelByInt(int level)
@@ -33,58 +37,60 @@ public class Cpu : MonoBehaviour
         set;
     }
 
+    /// <summary>
+    /// カードをランダムで2枚ピックする。
+    /// 
+    /// ロジックメモ:
+    ///     1枚目のカードを引く
+    ///        if   2枚以上セットで見えているカードがある && 抽選勝利 -> そのセット中からカードをランダムピックする
+    ///        else 完全にランダムピックする
+    ///     2枚目のカードを引く
+    ///         if   1枚目と同じナンバーのカードがある && 抽選勝利 -> その中からランダムピックする
+    ///         else 完全にランダムピックする
+    /// </summary>
+    /// <returns></returns>
     private Card[] PickTwoCards()
     {
-        var cards = new Card[0];
-        if (UnityEngine.Random.Range(0, 100.0f) <= _levelAndPickRateMap[Level])
+        Card[] restCards = _deck.RestCards();
+        if (restCards.Length <= 1)
         {
-            Debug.Log("PickShowedCards");
-            cards = PickTwoShowedCards();
-        }
-        if (cards.Length == 0)
-        {
-            cards = PickTwoRandomCards();
-        }
-        return cards;
-    }
-
-    private Card[] PickTwoRandomCards()
-    {
-        return PickTwoCardsFrom(_deck.RestCards());
-    }
-
-    private Card[] PickTwoCardsFrom(Card[] cards)
-    {
-        var first = UnityEngine.Random.Range(0, cards.Length);
-        var second = 0;
-        do
-        {
-            second = UnityEngine.Random.Range(0, cards.Length);
-        } while (second == first);
-
-        return new Card[2]{
-            cards[first],
-            cards[second],
-        };
-    }
-
-    private Card[] PickTwoShowedCards()
-    {
-        var cards = _deck.RestShowedCards();
-        if (cards.Length <= 2)
             return new Card[0];
+        }
+        Card[] restShowedCards = _deck.RestShowedCards();
 
-        var cardsPerNumber = cards
+        // 確定ピックを行うか。
+        bool pickShowedOne = UnityEngine.Random.Range(0, 100.0f) <= _levelAndPickRateMap[Level];
+
+        // 1枚目のカードを引く。
+        Card firstCard;
+        IGrouping<int, Card>[] cardsPerNumber = restShowedCards
             .GroupBy(card => card.Number)
             .Where(val => val.Count() >= 2)
             .ToArray();
+        if (pickShowedOne && cardsPerNumber.Length > 0)
+        {
+            int randIndex = UnityEngine.Random.Range(0, cardsPerNumber.Length);
+            Card[] sameSuitCards = cardsPerNumber[randIndex].ToArray();
+            firstCard = _deck.PickCardRandomlyFrom(sameSuitCards);
+        }
+        else
+        {
+            firstCard = _deck.PickCardRandomlyFrom(restCards);
+        }
 
-        if (cardsPerNumber.Length <= 0)
-            return new Card[0];
+        // 2枚目のカードを引く。
+        Card secondCard;
+        Card sameSuitCard = _deck.PickSameNumberCardFrom(restShowedCards, firstCard);
+        if (pickShowedOne && sameSuitCard != null)
+        {
+            secondCard = sameSuitCard;
+        }
+        else
+        {
+            secondCard = _deck.PickCardRandomlyFrom(restCards, firstCard);
+        }
 
-        var randIndex = UnityEngine.Random.Range(0, cardsPerNumber.Length);
-        var sameSuitCards = cardsPerNumber[randIndex].ToArray();
-        return PickTwoCardsFrom(sameSuitCards);
+        return new Card[2]{firstCard, secondCard};
     }
 
     private IEnumerator OpenTwoCards(Card[] cards)
@@ -138,11 +144,14 @@ public class Cpu : MonoBehaviour
     {
         if (TurnManager.Instance.NowTurn != PlayerType.Cpu || _picking)
             return;
-        if (! _deck.Built || _deck.RestCards().Length < 2)
+        if (! _deck.Built)
             return;
 
         _picking = true;
         var cards = PickTwoCards();
-        StartCoroutine(OpenTwoCards(cards));
+        if (cards.Length > 0)
+        {
+            StartCoroutine(OpenTwoCards(cards));
+        }
     }
 }

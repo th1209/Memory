@@ -100,9 +100,31 @@ public class Deck : MonoBehaviour
             .ToArray();
     }
 
+    public Card PickSameNumberCardFrom(Card[] cards, Card one)
+    {
+        Card[] sameSuitCards = cards
+            .Where((card) => { return card.Number == one.Number && card.Suit != one.Suit; })
+            .ToArray();
+        return PickCardRandomlyFrom(sameSuitCards);
+    }
+
+    public Card PickCardRandomlyFrom(Card[] cards, Card excludeOne = null)
+    {
+        if (cards.Length == 0)
+            return null;
+
+        Card card;
+        do
+        {
+            int randIndex = UnityEngine.Random.Range(0, cards.Length);
+            card = cards[randIndex];
+        } while (excludeOne != null && card.IsSame(excludeOne));
+        return card;
+    }
+
     public void Reset()
     {
-        if (! Built)
+        if (!Built)
             return;
 
         foreach (var card in _cards)
