@@ -6,35 +6,21 @@ using UnityEngine;
 public class Cpu : MonoBehaviour
 {
     [SerializeField]
-    private float _waitSeconds = 1.0f;
-
-    [SerializeField]
-    private CpuLevel _level;
+    private float _waitSeconds = 0.8f;
 
     private Deck _deck;
 
     private PlayerHand _hand;
 
+    private CpuLevel _levelObj;
+
     private bool _picking;
 
-    private Dictionary<CpuLevel, float> _levelAndPickRateMap;
+    private Dictionary<int, float> _levelAndPickRateMap;
 
-    /// <summary>
-    /// レベルを表すintとEnumのマップ(インスペクタ上で、Enumを値に設定できないため、やむなく定義)。
-    /// </summary>
-    private Dictionary<int, CpuLevel> _numberAndLevelMap;
-
-    public void SetLevelByInt(int level)
+    public int Level
     {
-        if (level < 0 || level > 2)
-            throw new ArgumentException("");
-        Level = _numberAndLevelMap[level];
-    }
-
-    public CpuLevel Level
-    {
-        get;
-        set;
+        get { return _levelObj.GetLevel(); }
     }
 
     /// <summary>
@@ -51,6 +37,7 @@ public class Cpu : MonoBehaviour
     /// <returns></returns>
     private Card[] PickTwoCards()
     {
+        Debug.Log("pick start");
         Card[] restCards = _deck.RestCards();
         if (restCards.Length <= 1)
         {
@@ -90,55 +77,61 @@ public class Cpu : MonoBehaviour
             secondCard = _deck.PickCardRandomlyFrom(restCards, firstCard);
         }
 
+        Debug.Log("pick finished");
         return new Card[2]{firstCard, secondCard};
     }
 
     private IEnumerator OpenTwoCards(Card[] cards)
     {
+        Debug.Log("start card opening");
         yield return new WaitForSeconds(_waitSeconds);
 
         cards[0].Open();
+        Debug.Log("open1");
 
         yield return new WaitForSeconds(_waitSeconds);
 
         cards[1].Open();
+        Debug.Log("open2");
+        // ココらへんで固まる
 
         yield return new WaitForSeconds(_waitSeconds);
+        Debug.Log("a");
+        
 
         if (cards[0].IsSame(cards[1]))
         {
+            Debug.Log("b");
             cards[0].Picked = true;
             cards[1].Picked = true;
 
             _hand.AddCard(cards[0]);
             _hand.AddCard(cards[1]);
+            Debug.Log("same card");
         }
         else
         {
             cards[0].Close();
             cards[1].Close();
             TurnManager.Instance.SwitchTurn(PlayerType.Player);
+            Debug.Log("other card");
         }
+        Debug.Log("c");
 
         _picking = false;
     }
 
     void Start()
     {
-        Level = CpuLevel.Normal;
         _picking = false;
-        _levelAndPickRateMap = new Dictionary<CpuLevel, float>(){
+        _levelAndPickRateMap = new Dictionary<int, float>(){
             {CpuLevel.Easy,   25.0f},
             {CpuLevel.Normal, 50.0f},
             {CpuLevel.Hard,   75.0f},
         };
-        _numberAndLevelMap = new Dictionary<int, CpuLevel>(){
-            {0, CpuLevel.Easy},
-            {1, CpuLevel.Normal},
-            {2, CpuLevel.Hard},
-        };
         _deck = GameObject.Find("/Field/Deck").GetComponent<Deck>();
         _hand = GameObject.Find("/Field/Player2Field").GetComponent<PlayerHand>();
+        _levelObj = GameObject.Find("/CpuLevel").GetComponent<CpuLevel>();
     }
     void Update()
     {

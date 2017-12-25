@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
-
     private static TurnManager _instance;
 
     private UIManager _uiManager;
@@ -39,7 +38,7 @@ public class TurnManager : MonoBehaviour
         _uiManager.SwitchTurn(NowTurn);
     }
 
-    void Start()
+    void Awake()
     {
         NowTurn = PlayerType.Player;
         _uiManager = GameObject.Find("/UIManager").GetComponent<UIManager>();

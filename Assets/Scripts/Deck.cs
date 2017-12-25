@@ -122,20 +122,20 @@ public class Deck : MonoBehaviour
         return card;
     }
 
-    public void Reset()
-    {
-        if (!Built)
-            return;
+    // public void Reset()
+    // {
+    //     if (!Built)
+    //         return;
 
-        foreach (var card in _cards)
-        {
-            GameObject.DestroyImmediate(card.gameObject);
-        }
+    //     foreach (var card in _cards)
+    //     {
+    //         GameObject.DestroyImmediate(card.gameObject);
+    //     }
 
-        gameObject.GetComponent<CardPositioner>().Reset();
+    //     gameObject.GetComponent<CardPositioner>().Reset();
 
-        Built = false;
-    }
+    //     Built = false;
+    // }
 
     void Start()
     {

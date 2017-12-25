@@ -29,11 +29,11 @@ public class PlayerHand : MonoBehaviour
 
         _cardNum++;
     }
-    public void Reset()
-    {
-        Score = 0;
-        gameObject.GetComponent<CardPositioner>().Reset();
-    }
+    // public void Reset()
+    // {
+    //     Score = 0;
+    //     gameObject.GetComponent<CardPositioner>().Reset();
+    // }
 
     void Start()
     {

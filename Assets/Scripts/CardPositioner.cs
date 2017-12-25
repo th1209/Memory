@@ -49,19 +49,14 @@ public class CardPositioner : MonoBehaviour
             UpdateCardPos(CurrentCardPos.x + CardOffset.x, CurrentCardPos.y);
     }
 
-    public void UpdateCardPos(Vector2 v)
-    {
-        UpdateCardPos(v.x, v.y);
-    }
-
-    public void UpdateCardPos(float x, float y)
+    private void UpdateCardPos(float x, float y)
     {
         var newPos = new Vector2(x, y);
         CurrentCardPos = newPos;
     }
 
-    public void Reset()
-    {
-        _currentCardPos = _initialCardPos;
-    }
+    // public void Reset()
+    // {
+    //     _currentCardPos = _initialCardPos;
+    // }
 }
