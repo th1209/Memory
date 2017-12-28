@@ -82,6 +82,13 @@ public class Card : MonoBehaviour
         );
     }
 
+    public void OnMouseEnter()
+    {
+    #if UNITY_EDITOR
+        Debug.Log(this);
+    #endif
+    }
+
     public void Open()
     {
         // TODO
@@ -144,5 +151,10 @@ public class Card : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public override string ToString()
+    {
+        return string.Format("N:{0} S:{1}", Number, Suit);
     }
 }

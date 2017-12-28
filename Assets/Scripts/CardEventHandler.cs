@@ -16,6 +16,12 @@ public class CardEventHandler : MonoBehaviour, ICardEventHandler
     private float _waitSeconds = 1.0f;
 
     /// <summary>
+    /// デバッグ用のシングルプレイモードフラグ。
+    /// </summary>
+    [SerializeField]
+    private bool _singlePlayMode = false;
+
+    /// <summary>
     /// 2枚のカードを格納する配列
     /// </summary>
     private Card[] _cards;
@@ -82,7 +88,10 @@ public class CardEventHandler : MonoBehaviour, ICardEventHandler
         {
             _cards[0].Close();
             _cards[1].Close();
-            TurnManager.Instance.SwitchTurn(PlayerType.Cpu);
+            if (!_singlePlayMode)
+            {
+                TurnManager.Instance.SwitchTurn(PlayerType.Cpu);
+            }
         }
         Array.Clear(_cards, 0, 2);
     }
