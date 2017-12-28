@@ -137,7 +137,7 @@ public class Deck : MonoBehaviour
     //     Built = false;
     // }
 
-    void Start()
+    void Awake()
     {
         Built = false;
     }
