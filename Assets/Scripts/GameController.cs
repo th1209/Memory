@@ -41,10 +41,10 @@ public class GameController : MonoBehaviour
         _turnManager.SwitchTurn(PlayerType.Player);
 
         _deck.BuildCards(
-            // Enumerable.Range(1, 10).ToArray(),
-            // new CardSuit[] { CardSuit.Club, CardSuit.Diamond, CardSuit.Heart, CardSuit.Spade }
-            Enumerable.Range(1, 4).ToArray(),
-            new CardSuit[] { CardSuit.Club, CardSuit.Diamond,}
+            Enumerable.Range(1, 10).ToArray(),
+            new CardSuit[] { CardSuit.Club, CardSuit.Diamond, CardSuit.Heart, CardSuit.Spade }
+            // Enumerable.Range(1, 4).ToArray(),
+            // new CardSuit[] { CardSuit.Club, CardSuit.Diamond,}
         );
     }
 }

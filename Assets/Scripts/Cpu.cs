@@ -37,7 +37,6 @@ public class Cpu : MonoBehaviour
     /// <returns></returns>
     private Card[] PickTwoCards()
     {
-        Debug.Log("pick start");
         Card[] restCards = _deck.RestCards();
         if (restCards.Length <= 1)
         {
@@ -77,7 +76,6 @@ public class Cpu : MonoBehaviour
             secondCard = _deck.PickCardRandomlyFrom(restCards, firstCard);
         }
 
-        Debug.Log("pick finished");
         return new Card[2]{firstCard, secondCard};
     }
 
@@ -93,7 +91,6 @@ public class Cpu : MonoBehaviour
         // ココらへんで固まる
 
         yield return new WaitForSeconds(_waitSeconds);
-        
 
         if (cards[0].IsSame(cards[1]))
         {
@@ -117,9 +114,9 @@ public class Cpu : MonoBehaviour
     {
         _picking = false;
         _levelAndPickRateMap = new Dictionary<int, float>(){
-            {CpuLevel.Easy,   25.0f},
-            {CpuLevel.Normal, 50.0f},
-            {CpuLevel.Hard,   75.0f},
+            {CpuLevel.Easy,   30.0f},
+            {CpuLevel.Normal, 55.0f},
+            {CpuLevel.Hard,   80.0f},
         };
         _deck = GameObject.Find("/Field/Deck").GetComponent<Deck>();
         _hand = GameObject.Find("/Field/Player2Field").GetComponent<PlayerHand>();

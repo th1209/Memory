@@ -118,7 +118,7 @@ public class Deck : MonoBehaviour
         {
             int randIndex = UnityEngine.Random.Range(0, cards.Length);
             card = cards[randIndex];
-        } while (excludeOne != null && card.IsSame(excludeOne));
+        } while (excludeOne != null && card.Number == excludeOne.Number && card.Suit == excludeOne.Suit);
         return card;
     }
 

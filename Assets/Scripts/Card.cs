@@ -155,6 +155,6 @@ public class Card : MonoBehaviour
 
     public override string ToString()
     {
-        return string.Format("N:{0} S:{1}", Number, Suit);
+        return string.Format("N:{0} S:{1} Showed:{2}", Number, Suit, Showed);
     }
 }
